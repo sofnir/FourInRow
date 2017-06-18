@@ -1,9 +1,11 @@
 #include "Game.h"
+#include "GameStateMenu.h"
 
 int main()
 {
 	Game game;
-	game.runGame();
+	game.pushState(new GameStateMenu(&game));
+	game.gameLoop();
 
-	return EXIT_SUCCESS;
+	return 0;
 }

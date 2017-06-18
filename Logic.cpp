@@ -2,60 +2,88 @@
 
 Logic::Logic()
 {
-	for (int i = 0; i < 6; i++)
-		for (int j = 0; j < 7; j++)
-			tabLogic[i][j] = 0;
 }
 
-int Logic::checkLogic()
+Logic::~Logic()
 {
-	//vertical
+}
+#include <iostream>
+void Logic::checkLogic(std::vector <std::vector <Coin*> > coins)
+{
+	//vertival
 	for (int j = 0; j <= 6; j++)
 		for (int i = 5; i >= 3; i--)
 		{
-			if (tabLogic[i][j] == tabLogic[i - 1][j] && tabLogic[i][j] == tabLogic[i - 2][j] && tabLogic[i][j] == tabLogic[i - 3][j] && tabLogic[i][j] != 0)
+			if (coins[i][j] != nullptr && coins[i - 1][j] != nullptr && coins[i - 2][j] != nullptr && coins[i - 3][j] != nullptr)
 			{
-				if (tabLogic[i][j] == 1) return 1;
-				else return 2;
+				if (coins[i][j]->getTextureRect() == coins[i - 1][j]->getTextureRect() && coins[i][j]->getTextureRect() ==
+					coins[i - 2][j]->getTextureRect() && coins[i][j]->getTextureRect() == coins[i - 3][j]->getTextureRect())
+				{
+					state = (coins[i][j]->getTexture() == &Data::redCoin) ? RED_WIN : YELLOW_WIN;
+					return;
+				}
 			}
 		}
 	// horizontal
-	for (int j = 5; j >= 0; j--)
-		for (int i = 0; i <= 3; i++)
+	for (int i = 5; i >= 0; i--)
+		for (int j = 0; j <= 3; j++)
 		{
-			if (tabLogic[j][i] == tabLogic[j][i + 1] && tabLogic[j][i] == tabLogic[j][i + 2] && tabLogic[j][i] == tabLogic[j][i + 3] && tabLogic[j][i] != 0)
+			if (coins[i][j] != nullptr && coins[i][j + 1] != nullptr && coins[i][j + 2] != nullptr && coins[i][j + 3] != nullptr)
 			{
-				if (tabLogic[j][i] == 1) return 1;
-				else return 2;
+				if (coins[i][j]->getTextureRect() == coins[i][j + 1]->getTextureRect() && coins[i][j]->getTextureRect() ==
+					coins[i][j + 2]->getTextureRect() && coins[i][j]->getTextureRect() == coins[i][j + 3]->getTextureRect())
+				{
+					state = (coins[i][j]->getTexture() == &Data::redCoin) ? RED_WIN : YELLOW_WIN;
+					return;
+				}
 			}
 		}
 	// up right
 	for (int i = 3; i <= 5; i++)
 		for (int j = 0; j <= 3; j++)
 		{
-			if (tabLogic[i][j] == tabLogic[i - 1][j + 1] && tabLogic[i][j] == tabLogic[i - 2][j + 2] && tabLogic[i][j] == tabLogic[i - 3][j + 3] && tabLogic[i][j] != 0)
+			if (coins[i][j] != nullptr && coins[i - 1][j + 1] != nullptr && coins[i - 2][j + 2] != nullptr &&
+				coins[i - 3][j + 3] != nullptr)
 			{
-				if (tabLogic[i][j] == 1) return 1;
-				else return 2;
+				if (coins[i][j]->getTexture() == coins[i - 1][j + 1]->getTexture() && coins[i][j]->getTexture() ==
+					coins[i - 2][j + 2]->getTexture() && coins[i][j]->getTexture() == coins[i - 3][j + 3]->getTexture())
+				{
+					state = (coins[i][j]->getTexture() == &Data::redCoin) ? RED_WIN : YELLOW_WIN;
+					return;
+				}
 			}
 		}
 	// down right
 	for (int i = 2; i >= 0; i--)
 		for (int j = 0; j <= 3; j++)
 		{
-			if (tabLogic[i][j] == tabLogic[i + 1][j + 1] && tabLogic[i][j] == tabLogic[i + 2][j + 2] && tabLogic[i][j] == tabLogic[i + 3][j + 3] && tabLogic[i][j] != 0)
+			if (coins[i][j] != nullptr && coins[i + 1][j + 1] != nullptr && coins[i + 2][j + 2] != nullptr &&
+				coins[i + 3][j + 3] != nullptr)
 			{
-				if (tabLogic[2][j] == 1) return 1;
-				else return 2;
+				if (coins[i][j]->getTexture() == coins[i + 1][j + 1]->getTexture() && coins[i][j]->getTexture() ==
+					coins[i + 2][j + 2]->getTexture() && coins[i][j]->getTexture() == coins[i + 3][j + 3]->getTexture())
+				{
+					state = (coins[i][j]->getTexture() == &Data::redCoin) ? RED_WIN : YELLOW_WIN;
+					return;
+				}
 			}
 		}
 
-	return 0;
-}
+	//check draw
+	int coinsNumber = 0;
 
-void Logic::restart()
-{
 	for (int i = 0; i < 6; i++)
 		for (int j = 0; j < 7; j++)
-			tabLogic[i][j] = 0;
+		{
+			if (coins[i][j] != nullptr)
+			{
+				coinsNumber++;
+			}
+		}
+
+	if (coinsNumber == 42)
+	{
+		state = DRAW;
+		return;
+	}
 }

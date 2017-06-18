@@ -1,30 +1,48 @@
 #include "Game.h"
+#include "GameState.h"
 
-Game::Game() : state("MENU")
+Game::Game()
 {
-	window.create(sf::VideoMode(700, 600), "FourInRow", sf::Style::Close);
-	window.setFramerateLimit(144);
+	window.create(sf::VideoMode(Config::windowSize.x, Config::windowSize.y), "Template", sf::Style::Close);
+	window.setFramerateLimit(60);
 }
 
-void Game::runGame()
+Game::~Game()
 {
-	while (state != "END")
+	while (!states.empty())
+		popState();
+}
+
+void Game::pushState(GameState* state)
+{
+	states.push(state);
+}
+
+void Game::popState()
+{
+	delete states.top();
+	states.pop();
+}
+
+GameState* Game::peekState()
+{
+	if (states.empty())
+		return nullptr;
+	else
+		return states.top();
+}
+
+void Game::gameLoop()
+{
+	while (window.isOpen())
 	{
-		if (state == "MENU")
-			menu();
-		else if (state == "PLAY")
-			play();
+		mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
+
+		if (peekState() == nullptr)
+			continue;
+
+		peekState()->handleInput();
+		peekState()->update();
+		peekState()->draw();
 	}
-}
-
-void Game::menu()
-{
-	Menu menu(window, state);
-	menu.runMenu();
-}
-
-void Game::play()
-{
-	Play play(window, state);
-	play.runPlay();
 }

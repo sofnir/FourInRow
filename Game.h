@@ -1,18 +1,28 @@
 #pragma once
-#include "Menu.h"
-#include "Play.h"
-#include <windows.h>
+#include <stack>
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include "Data.h"
+
+class GameState;
 
 class Game
 {
 public:
 	Game();
-	void runGame();
+	~Game();
+
+	sf::RenderWindow window;
+	sf::Vector2f mousePosition;
+	Data data;
+
+	void pushState(GameState* state);
+	void popState();
+	GameState* peekState();
+
+	void gameLoop();
 
 private:
-	std::string state;
-	sf::RenderWindow window;
-
-	void menu();
-	void play();
+	std::stack<GameState*> states;
 };
+

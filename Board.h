@@ -1,21 +1,24 @@
 #pragma once
-#include <SFML\Graphics.hpp>
-#include <Windows.h>
+#include "SFML\Graphics.hpp"
+#include "Data.h"
+#include "Coin.h"
+#include <vector>
 
-class Board
+class Board : public sf::Drawable
 {
 public:
 	Board();
 
-	const sf::Sprite & Sprite() { return sprite; }
-	const sf::Vector2f * HolesPosition() { return & holesPosition[0][0]; }
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+	bool pushCoin(Coin * coin);
+	std::vector <std::vector <Coin*> > getCoins() { return coins; }
+	void reset();
 
 private:
-	sf::Texture texture;
-	sf::Sprite sprite;
-	sf::Vector2f holesPosition[6][7];
+	sf::Texture boardTexture;
+	sf::Sprite board;
+	std::vector <std::vector <Coin*> > coins;
 
-	void loadTexture();
-	void create();
-	void setHolesPosition();
+	void createBoard();
+	int findHole(int x);
 };

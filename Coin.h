@@ -1,41 +1,17 @@
 #pragma once
-#include <SFML\Graphics.hpp>
-#include <Windows.h>
-#include "Board.h"
+#include "SFML\Graphics.hpp"
+#include "Data.h"
 
-class Coin
+class Coin : public sf::Sprite
 {
 public:
 	Coin();
+	Coin(const sf::Texture &texture);
 
-	void create(const sf::Vector2f * holesPosition);
-	void reset();
-	void setProperties(int i);
-	void move(const sf::Vector2f * holesPosition, const sf::Vector2f mousePos);
-	void setStopPosition(const sf::Vector2f * holesPosition, const int * tabLogic);
-	void moveDown();
-	void setTabLogicValue(int * tabLogic);
-
-	sf::Sprite & Sprite() { return sprite; }
-	bool & Show() { return show; }
-	bool & Enable() { return enable; }
-	bool & Fall() { return fall; }
-	float & StopPosition() { return stopPosition; }
+	int getCurrentPosition() const { return position; }
+	void moveRight();
+	void moveLeft();
 
 private:
-	sf::Sprite sprite;
-	bool show;
-	bool enable;
-	bool fall;
-	float stopPosition;
-	sf::Texture redTexture;
-	sf::Texture yellowTexture;
-	int value;
-	int xPosition;
-	int yPosition;
-    float speed;
-	const float gravity;
-	
-	void loadTextures();
+	int position = 3;
 };
-
