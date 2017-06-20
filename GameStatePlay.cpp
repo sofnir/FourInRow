@@ -12,18 +12,23 @@ void GameStatePlay::draw()
 {
 	game->window.clear(sf::Color::Black);
 	game->window.draw(Data::background);
-	game->window.draw(board);
-
+	
 	if (coin != nullptr)
 	{
 		game->window.draw(*coin);
 	}
 
+	game->window.draw(board);
+
 	for (auto &button : buttons)
+	{
 		game->window.draw(button);
+	}		
 
 	if (dialog != nullptr)
+	{
 		game->window.draw(*dialog);
+	}		
 
 	game->window.display();
 }
@@ -31,7 +36,23 @@ void GameStatePlay::draw()
 void GameStatePlay::update()
 {
 	for (auto &button : buttons)
+	{
 		button.update(game->mousePosition);
+	}		
+	
+	if (coin != nullptr)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			if (game->mousePosition.x > Config::windowSize.x / 2.0f - (3 - i) * 0.5f * 125.0f - 0.25f * 125.0f &&
+				game->mousePosition.x < Config::windowSize.x / 2.0f - (3 - i) * 0.5f * 125.0f + 0.25f * 125.0f)
+			{
+				coin->setCurrentPosition(i);
+			}
+		}		
+	}	
+
+	board.update();
 }
 
 void GameStatePlay::handleInput()
@@ -42,57 +63,51 @@ void GameStatePlay::handleInput()
 	{
 		switch (event.type)
 		{
-		case sf::Event::Closed:
-		{
+		case sf::Event::Closed:		
 			game->window.close();
-			break;
-		}
-		case sf::Event::KeyPressed:
-		{
+			break;		
+		case sf::Event::KeyPressed:		
 			if (event.key.code == sf::Keyboard::Escape)
 			{
 				game->popState();
 				return;
-			}
-			else if (event.key.code == sf::Keyboard::Right && coin != nullptr)
-			{
-				coin->moveRight();
-			}
-			else if (event.key.code == sf::Keyboard::Left && coin != nullptr)
-			{
-				coin->moveLeft();
-			}
-			else if (event.key.code == sf::Keyboard::Down && coin != nullptr)
-			{
-				if (board.pushCoin(coin))
-				{
-					logic.checkLogic(board.getCoins());
-					logic.changeTurn();
-
-					if (logic.getState() == PLAYING)
-					{
-						coin = (logic.isRedTurn()) ? new Coin(Data::redCoin) : new Coin(Data::yellowCoin);
-					}
-					else
-					{
-						coin = nullptr;
-
-						if (logic.getState() == RED_WIN)
-							dialog = new Dialog("The winner is\n   red player");
-						else if (logic.getState() == YELLOW_WIN)
-							dialog = new Dialog("The winner is\n yellow player");
-						else if (logic.getState() == DRAW)
-							dialog = new Dialog("Draw");
-					}
-				}
-			}
-			break;
-		}
+			}						
+			break;		
 		case sf::Event::MouseButtonPressed:
 		{
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				if (buttons[0].isHover(game->mousePosition))
+				if (coin != nullptr && board.contain(game->mousePosition))
+				{
+					if (board.pushCoin(coin))
+					{
+						logic.checkLogic(board.getCoins());
+						logic.changeTurn();
+
+						if (logic.getState() == gameState::PLAYING)
+						{
+							coin = (logic.isRedTurn()) ? new Coin(Data::redCoin) : new Coin(Data::yellowCoin);
+						}
+						else
+						{
+							coin = nullptr;
+
+							if (logic.getState() == gameState::RED_WIN)
+							{
+								dialog = new Dialog("The winner is\n   red player");
+							}
+							else if (logic.getState() == gameState::YELLOW_WIN)
+							{
+								dialog = new Dialog("The winner is\n yellow player");
+							}
+							else if (logic.getState() == gameState::DRAW)
+							{
+								dialog = new Dialog("Draw");
+							}
+						}
+					}
+				}
+				else if (buttons[0].isHover(game->mousePosition))
 				{
 					game->popState();
 					return;
@@ -100,7 +115,7 @@ void GameStatePlay::handleInput()
 				else if (buttons[1].isHover(game->mousePosition))
 				{
 					board.reset();
-					logic.setGameState(PLAYING);
+					logic.setGameState(gameState::PLAYING);
 					coin = (logic.isRedTurn()) ? new Coin(Data::redCoin) : new Coin(Data::yellowCoin);
 					Dialog *wsk = dialog;
 					dialog = nullptr;

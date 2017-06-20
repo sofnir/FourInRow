@@ -1,22 +1,30 @@
 #include "Board.h"
-#include <iostream>
+
 Board::Board()
 {
 	createBoard();
 	coins.resize(6);
 
 	for (int i = 0; i < 6; i++)
+	{
 		coins[i].resize(7);
+	}		
 }
 
 void Board::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(board);
-
+{	
 	for (auto & row : coins)
+	{
 		for (auto & coin : row)
+		{
 			if (coin != nullptr)
+			{
 				target.draw(*coin);
+			}
+		}							
+	}		
+
+	target.draw(board);
 }
 
 bool Board::pushCoin(Coin * coin)
@@ -26,12 +34,12 @@ bool Board::pushCoin(Coin * coin)
 
 	if (y >= 0)
 	{
-
 		coins[y][x] = coin;
-		int diff = (board.getGlobalBounds().top + 79.0f * 0.5f) - coins[y][x]->getPosition().y; //distance between coin and first hole
+		int diff = (board.getGlobalBounds().top + 79.0f * 0.5f);
 		float stopPosition = diff + y * 125.0f * 0.5f;
-		coins[y][x]->move(sf::Vector2f(0, stopPosition));
-
+		coins[y][x]->setFinalPosition(stopPosition);
+		coins[y][x]->changeFallingState();
+		
 		return true;
 	}
 
@@ -44,7 +52,23 @@ void Board::reset()
 	coins.resize(6);
 
 	for (int i = 0; i < 6; i++)
+	{
 		coins[i].resize(7);
+	}		
+}
+
+void Board::update()
+{
+	for (auto & row : coins)
+	{
+		for (auto & coin : row)
+		{
+			if (coin != nullptr)
+			{
+				coin->update();
+			}
+		}
+	}
 }
 
 void Board::createBoard()

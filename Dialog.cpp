@@ -15,7 +15,7 @@ Dialog::Dialog(const sf::String & string)
 void Dialog::createShape()
 {
 	shape.setSize(sf::Vector2f(350.0f, 150.0f));
-	shape.setFillColor(sf::Color(30, 144, 255, 200));
+	shape.setFillColor(sf::Color(69, 159, 212, 200));
 	shape.setOrigin(sf::Vector2f(shape.getGlobalBounds().width / 2, shape.getGlobalBounds().height / 2));
 	shape.setPosition(sf::Vector2f(Config::windowSize.x / 2.0f, Config::windowSize.y / 2));
 	shape.setOutlineThickness(5);

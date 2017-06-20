@@ -47,7 +47,9 @@ void GameStateMenu::draw()
 	game->window.draw(title);
 
 	for (auto & button : buttons)
+	{
 		game->window.draw(button);
+	}		
 
 	game->window.display();
 }
@@ -55,7 +57,9 @@ void GameStateMenu::draw()
 void GameStateMenu::update()
 {
 	for (auto & button : buttons)
+	{
 		button.update(game->mousePosition);
+	}		
 }
 
 void GameStateMenu::handleInput()
@@ -66,29 +70,31 @@ void GameStateMenu::handleInput()
 	{
 		switch (event.type)
 		{
-		case sf::Event::Closed:
-		{
+		case sf::Event::Closed:		
 			game->window.close();
-			break;
-		}
-		case sf::Event::KeyPressed:
-		{
+			break;		
+		case sf::Event::KeyPressed:		
 			if (event.key.code == sf::Keyboard::Escape)
+			{
 				game->window.close();
+			}			
 			else if (event.key.code == sf::Keyboard::Return)
+			{
 				playGame();
-			break;
-		}
-		case sf::Event::MouseButtonPressed:
-		{
+			}
+			break;		
+		case sf::Event::MouseButtonPressed:		
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
 				if (buttons[0].isHover(game->mousePosition))
+				{
 					playGame();
+				}					
 				else if (buttons[1].isHover(game->mousePosition))
+				{
 					game->window.close();
-			}
-		}
+				}					
+			}		
 		default:
 			break;
 		}

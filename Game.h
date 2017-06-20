@@ -1,6 +1,7 @@
 #pragma once
+#include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML\Window\Mouse.hpp>
 #include <stack>
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Data.h"
 

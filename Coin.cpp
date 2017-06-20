@@ -12,20 +12,29 @@ Coin::Coin(const sf::Texture & texture) : sf::Sprite(texture)
 	setScale(sf::Vector2f(0.5f, 0.5f));
 }
 
-void Coin::moveRight()
+void Coin::setCurrentPosition(int x)
 {
-	if (position < 6)
+	if (x >= 0 && x < 7)
 	{
-		move(sf::Vector2f(125.0f * 0.5f, 0));
-		position++;
+		float dx = (x - position) * 125.0f * 0.5f;
+		move(sf::Vector2f(dx, 0));
+		position = x;
 	}
 }
 
-void Coin::moveLeft()
+void Coin::update()
 {
-	if (position > 0)
+	if (falling)
 	{
-		move(sf::Vector2f(-125.0f * 0.5f, 0));
-		position--;
+		if (getPosition().y < finalPosition)
+		{
+			speed += gravity;
+			move(sf::Vector2f(0, speed));			
+		}
+		else
+		{
+			setPosition(sf::Vector2f(getPosition().x, finalPosition));			
+			changeFallingState();
+		}			
 	}
 }

@@ -3,13 +3,12 @@
 #include "Coin.h"
 #include "Data.h"
 
-enum gameState { PLAYING, RED_WIN, YELLOW_WIN, DRAW };
+enum class gameState { PLAYING, RED_WIN, YELLOW_WIN, DRAW };
 
 class Logic
 {
 public:
 	Logic();
-	~Logic();
 
 	bool isRedTurn() const { return redTurn == true; }
 	void changeTurn() { redTurn = !redTurn; }
@@ -19,6 +18,6 @@ public:
 
 private:
 	bool redTurn = true;
-	gameState state = PLAYING;
+	gameState state = gameState::PLAYING;
 };
 
